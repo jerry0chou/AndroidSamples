@@ -20,13 +20,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun InputScreen() {
+fun InputScreen(navController: NavController) {
     var firstName by rememberSaveable { mutableStateOf("") }
     var lastName by rememberSaveable { mutableStateOf("") }
     var age by rememberSaveable { mutableStateOf("") }
@@ -47,7 +46,7 @@ fun InputScreen() {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 )
             Spacer(modifier = Modifier.height(10.dp))
-            Button(onClick = { Log.d(TAG, "InputScreen: submit") }) {
+            Button(onClick = { Log.d(TAG, "InputScreen: submit"); navController.navigate(Screen.ListView.route) }) {
                 Text(text = "Submit")
             }
         }

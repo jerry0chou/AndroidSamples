@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.roomoperation.data.User
 
 const val TAG = "ROOM"
@@ -53,9 +54,8 @@ fun ListItem(user: User) {
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun ListScreen() {
+fun ListScreen(navController: NavController) {
     val userList = listOf(
         User(1, "Jerry", "Chou", 18),
         User(1, "Jerry", "Chou", 18),
@@ -71,7 +71,7 @@ fun ListScreen() {
         }
 
         Row(modifier = Modifier.weight(0.1f).fillMaxWidth(), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically) {
-            Button(onClick = { Log.d(TAG, "ListScreen: add") }) {
+            Button(onClick = { Log.d(TAG, "ListScreen: add"); navController.navigate(Screen.InputView.route) }) {
                 Text(text = "Add")
             }
         }
