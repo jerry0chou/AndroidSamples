@@ -1,10 +1,11 @@
 package com.example.roomoperation.compose
 
+import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.roomoperation.data.UserViewModel
 
 
 sealed class Screen(val route: String) {
@@ -12,16 +13,16 @@ sealed class Screen(val route: String) {
     object InputView : Screen("Input")
 }
 
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun Router(){
+fun Router(context: Context){
     val navController = rememberNavController()
+    val userVM = UserViewModel(context)
     NavHost(navController = navController, startDestination = Screen.ListView.route) {
         composable(Screen.ListView.route) {
-            ListScreen(navController)
+            ListScreen(navController,userVM )
         }
         composable(Screen.InputView.route) {
-            InputScreen(navController)
+            InputScreen(navController, userVM)
         }
     }
 }

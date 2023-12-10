@@ -1,10 +1,10 @@
 package com.example.roomoperation.data
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
@@ -13,5 +13,5 @@ interface UserDao {
     suspend fun addUser(user: User)
 
     @Query("SELECT * FROM user_table ORDER BY id ASC")
-    fun readAllData(): LiveData<List<User>>
+    fun readAllData(): Flow<List<User>>
 }

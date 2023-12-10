@@ -13,7 +13,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -22,13 +21,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.roomoperation.data.User
+import com.example.roomoperation.data.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputScreen(navController: NavController) {
+fun InputScreen(navController: NavController, userVM: UserViewModel) {
     var firstName by rememberSaveable { mutableStateOf("") }
     var lastName by rememberSaveable { mutableStateOf("") }
     var age by rememberSaveable { mutableStateOf("") }
+
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -46,7 +48,11 @@ fun InputScreen(navController: NavController) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 )
             Spacer(modifier = Modifier.height(10.dp))
-            Button(onClick = { Log.d(TAG, "InputScreen: submit"); navController.navigate(Screen.ListView.route) }) {
+            Button(onClick = { Log.d(TAG, "InputScreen: submit");
+                userVM.addUser(User(0, firstName, lastName, age.toInt()))
+                navController.navigate(Screen.ListView.route)
+
+            }) {
                 Text(text = "Submit")
             }
         }

@@ -1,21 +1,21 @@
 package com.example.roomoperation.data
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class UserViewModel(application: Application): AndroidViewModel(application) {
-    private val readAllData:  LiveData<List<User>>
+class UserViewModel(context: Context): AndroidViewModel(Application()) {
     private val repository: UserRepository
+    val allUsers:  Flow<List<User>>
 
     init {
-        val useDao = UserDatabase.getDatabase(application).userDao()
+        val useDao = UserDatabase.getDatabase(context).userDao()
         repository = UserRepository(useDao)
-        readAllData = repository.readAllData
+        allUsers = repository.readAllData
     }
     fun addUser(user: User){
         viewModelScope.launch(Dispatchers.IO) { repository.addUser(user)  }
