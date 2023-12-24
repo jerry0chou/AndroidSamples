@@ -56,7 +56,9 @@ android {
 dependencies {
     val roomVersion = "2.6.0"
     val kotlinVersion = "1.9.10"
-    //
+    // Gson
+    implementation("com.google.code.gson:gson:2.10.1")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     // Room
     implementation("androidx.room:room-runtime:$roomVersion")

@@ -16,7 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -27,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.roomoperation.data.User
 import com.example.roomoperation.data.UserViewModel
+import com.example.roomoperation.utils.fromJson
 import com.example.roomoperation.utils.shortToast
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,12 +38,28 @@ fun InputScreen(navController: NavController, userVM: UserViewModel) {
     var firstName by rememberSaveable { mutableStateOf("") }
     var lastName by rememberSaveable { mutableStateOf("") }
     var age by rememberSaveable { mutableStateOf("") }
+    var params by remember { mutableStateOf<InputParams?>(null) }
     val context = LocalContext.current
 
     LaunchedEffect(key1 = Unit){
         Log.d(TAG, "InputScreen: init")
         val data =  navController.previousBackStackEntry?.savedStateHandle?.get<String>(InputParamsKey)
         Log.d(TAG, "InputScreen: $data")
+        val transferredData = fromJson<InputParams>(data?: "")
+        Log.d(TAG, "InputScreen transferredData: $transferredData")
+        params = transferredData
+        if(transferredData.operation == Operation.EDIT){
+            transferredData.userId?.let {
+                val user = userVM.findUserById(it)
+                Log.d(TAG, "InputScreen findUserById: $user")
+                user?.let { u->
+                    firstName = u.firstName
+                    lastName= u.lastName
+                    age = u.age.toString()
+                }
+
+            }
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
@@ -71,7 +90,16 @@ fun InputScreen(navController: NavController, userVM: UserViewModel) {
 
                 Button(onClick = { Log.d(TAG, "InputScreen: submit")
                     if(firstName.isNotEmpty() && lastName.isNotEmpty() && age.isNotEmpty()){
-                        userVM.addUser(User(0, firstName, lastName, age.toInt()))
+                        params?.let {
+                            if(it.operation == Operation.EDIT){
+                                Log.d(TAG, "InputScreen: it.operation == Operation.EDIT")
+                                it.userId?.let {uid->
+                                    userVM.updateUserInfo(User(uid, firstName, lastName, age.toInt()))
+                                }
+                            }else{
+                                userVM.addUser(User(0, firstName, lastName, age.toInt()))
+                            }
+                        }
                         navController.navigate(Screen.ListView.route)
                     }else{
                         context.shortToast("please check you data that is not empty")

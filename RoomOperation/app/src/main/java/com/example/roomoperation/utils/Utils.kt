@@ -5,6 +5,8 @@ import android.util.Log
 import android.widget.Toast
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 const val TAG = "ROOM"
 fun Context.shortToast(message: String) {
@@ -34,6 +36,9 @@ fun <T : Param> T.toStr(): String {
 }
 
 
+inline fun <reified T> fromJson(json: String): T {
+    return Gson().fromJson(json, object : TypeToken<T>() {}.type)
+}
 //val str = map.toString().replace("{","").replace("}", "").split(", ")
 //Log.d(TAG, "toStr: $str")
 //str.forEach()

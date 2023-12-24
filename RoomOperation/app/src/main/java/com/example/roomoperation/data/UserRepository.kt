@@ -1,5 +1,6 @@
 package com.example.roomoperation.data
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 
 class UserRepository(private val userDao: UserDao) {
@@ -15,6 +16,7 @@ class UserRepository(private val userDao: UserDao) {
 
     suspend fun updateUserInfo(newUser: User){
         val user = userDao.getUserById(newUser.id)
-        user?.let { userDao.updateUser(it) }
+        Log.d(TAG, "updateUserInfo: UserRepository $newUser")
+        user?.let { userDao.updateUser(newUser) }
     }
 }
