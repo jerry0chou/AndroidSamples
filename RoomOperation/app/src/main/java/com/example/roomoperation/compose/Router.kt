@@ -6,12 +6,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.roomoperation.data.UserViewModel
+import com.example.roomoperation.utils.Param
 
+enum class Operation{
+    ADD,
+    EDIT
+}
 
 sealed class Screen(val route: String) {
-    object ListView : Screen("List")
-    object InputView : Screen("Input")
+    data object ListView : Screen("List")
+    data object InputView:  Screen("Input")
 }
+
+data class InputParams(val operation: Operation, val userId: Int? = null): Param()
+const val InputParamsKey = "InputParamsKey"
 
 @Composable
 fun Router(context: Context){

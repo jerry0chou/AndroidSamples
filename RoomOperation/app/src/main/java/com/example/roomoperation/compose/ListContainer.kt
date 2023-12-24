@@ -2,6 +2,7 @@ package com.example.roomoperation.compose
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,16 +29,22 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.roomoperation.data.User
 import com.example.roomoperation.data.UserViewModel
+import com.example.roomoperation.utils.toStr
 
 const val TAG = "ROOM"
 
 @Composable
-fun ListItem(user: User) {
+fun ListItem(user: User, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(24.dp))
             .background(Color.Magenta)
+            .clickable {
+                Log.d(TAG, "$user")
+                navController.currentBackStackEntry?.savedStateHandle?.set(InputParamsKey, InputParams(Operation.EDIT, user.id).toStr())
+                navController.navigate(Screen.InputView.route)
+            }
             .padding(15.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -62,14 +69,25 @@ fun ListScreen(navController: NavController, userVM: UserViewModel) {
         LazyColumn(modifier = Modifier.weight(0.9f), contentPadding = PaddingValues(10.dp)) {
             items(items = userList) {
                 Spacer(modifier = Modifier.height(10.dp))
-                ListItem(user = it)
+                ListItem(user = it, navController)
             }
         }
 
-        Row(modifier = Modifier
-            .weight(0.1f)
-            .fillMaxWidth(), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically) {
-            Button(onClick = { Log.d(TAG, "ListScreen: add"); navController.navigate(Screen.InputView.route) }) {
+        Row(
+            modifier = Modifier
+                .weight(0.1f)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                onClick = {
+                    Log.d(TAG, "ListScreen: add")
+                    navController.currentBackStackEntry?.savedStateHandle?.set(InputParamsKey, InputParams(Operation.ADD).toStr())
+                    navController.navigate(Screen.InputView.route)
+                }
+
+            ) {
                 Text(text = "Add")
             }
         }

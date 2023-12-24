@@ -20,4 +20,10 @@ class UserViewModel(context: Context): AndroidViewModel(Application()) {
     fun addUser(user: User){
         viewModelScope.launch(Dispatchers.IO) { repository.addUser(user)  }
     }
+    // 添加更新用户信息的函数
+    fun updateUserInfo(newUser: User) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateUserInfo(newUser)
+        }
+    }
 }
