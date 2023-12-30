@@ -32,4 +32,8 @@ class UserViewModel(context: Context): AndroidViewModel(Application()) {
     suspend fun findUserById(userId: Int): User? {
         return repository.getUserById(userId)
     }
+
+    fun deleteUser(user: User){
+        viewModelScope.launch(Dispatchers.IO) { repository.deleteUser(user) }
+    }
 }

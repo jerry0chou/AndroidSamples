@@ -15,6 +15,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,7 +36,7 @@ import com.example.roomoperation.data.UserViewModel
 const val TAG = "ROOM"
 
 @Composable
-fun ListItem(user: User, navController: NavController) {
+fun ListItem(user: User,onRowClick: ()-> Unit,onDeleteClick: ()-> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,8 +44,7 @@ fun ListItem(user: User, navController: NavController) {
             .background(Color.Magenta)
             .clickable {
                 Log.d(TAG, "$user")
-                navController.currentBackStackEntry?.savedStateHandle?.set(InputParamsKey, InputParams(Operation.EDIT, user.id).toStr())
-                navController.navigate(Screen.InputView.route)
+                onRowClick()
             }
             .padding(15.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -58,6 +59,17 @@ fun ListItem(user: User, navController: NavController) {
         Text(text = user.firstName, color = Color.White, fontSize = 20.sp)
         Text(text = user.lastName, color = Color.White, fontSize = 20.sp)
         Text(text = user.age.toString(), color = Color.White, fontSize = 20.sp)
+
+        Button(
+            colors = ButtonDefaults.buttonColors(Color.Yellow),
+            onClick = {
+                Log.d(TAG, "ListItem: Delete button")
+                onDeleteClick()
+            }
+
+        ) {
+            Text(text = "Delete", color = Color.Black)
+        }
     }
 }
 
@@ -65,11 +77,20 @@ fun ListItem(user: User, navController: NavController) {
 fun ListScreen(navController: NavController, userVM: UserViewModel) {
     val userList by userVM.allUsers.collectAsState(initial = emptyList())
 
+    val onRowClick = {u: User->
+        navController.currentBackStackEntry?.savedStateHandle?.set(InputParamsKey, InputParams(Operation.EDIT, u.id).toStr())
+        navController.navigate(Screen.InputView.route)
+    }
+    val onDeleteClick = { u: User->
+        Log.d(TAG, "ListScreen: Delete button")
+        userVM.deleteUser(u)
+    }
+
     Column(modifier = Modifier.fillMaxWidth()) {
         LazyColumn(modifier = Modifier.weight(0.9f), contentPadding = PaddingValues(10.dp)) {
             items(items = userList) {
                 Spacer(modifier = Modifier.height(10.dp))
-                ListItem(user = it, navController)
+                ListItem(it, {onRowClick(it)},{onDeleteClick(it)})
             }
         }
 

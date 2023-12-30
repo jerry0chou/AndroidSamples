@@ -19,4 +19,8 @@ class UserRepository(private val userDao: UserDao) {
         Log.d(TAG, "updateUserInfo: UserRepository $newUser")
         user?.let { userDao.updateUser(newUser) }
     }
+
+    suspend fun deleteUser(user: User){
+        userDao.deleteUser(user)
+    }
 }
