@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.network.operation.User
 import com.example.network.operation.UserViewModel
 import kotlinx.coroutines.launch
 
@@ -26,6 +27,7 @@ fun UserScreen(userViewModel: UserViewModel){
     val scope = rememberCoroutineScope()
     var user by remember { mutableStateOf("") }
     var userList by remember { mutableStateOf("") }
+    var createdUser by remember { mutableStateOf("") }
 
     Column {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
@@ -53,6 +55,18 @@ fun UserScreen(userViewModel: UserViewModel){
             }
         }
         Text(text = userList)
+
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            Button(onClick = {
+                scope.launch {
+                    createdUser = userViewModel.createUser(User(520, "Hello", "World", 25)).toString()
+                }
+            },
+            ) {
+                Text(text = "CreateUser")
+            }
+        }
+        Text(text = createdUser)
     }
     
 

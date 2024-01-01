@@ -1,6 +1,8 @@
 package com.example.network.operation
 
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
@@ -12,4 +14,7 @@ interface UserAPI {
 
     @GET("user/list")
     suspend fun getUserList(@QueryMap map: Map<String, String>): List<User>
+
+    @POST("user/create")
+    suspend fun createUser(@Body user: User): User
 }

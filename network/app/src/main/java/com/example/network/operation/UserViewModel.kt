@@ -17,4 +17,8 @@ class UserViewModel : ViewModel() {
     suspend fun getUsers(map: Map<String, String>): List<User>{
         return UserNetwork.userAPI.getUserList(map)
     }
+
+    suspend fun createUser(user: User): User{
+        return UserNetwork.userAPI.createUser(user)
+    }
 }
