@@ -10,7 +10,11 @@ class UserViewModel : ViewModel() {
 //    private val _user = mutableStateOf<User?>(null)
 //    val user: State<User?> = _user
 
-    suspend fun fetchUser(): User {
-        return UserNetwork.userAPI.getUserById()
+    suspend fun fetchUser(userId: Int): User {
+        return UserNetwork.userAPI.getUserById(userId)
+    }
+
+    suspend fun getUsers(map: Map<String, String>): List<User>{
+        return UserNetwork.userAPI.getUserList(map)
     }
 }

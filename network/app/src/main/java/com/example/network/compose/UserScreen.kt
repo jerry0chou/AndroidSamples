@@ -25,11 +25,13 @@ const val TAG = "Network"
 fun UserScreen(userViewModel: UserViewModel){
     val scope = rememberCoroutineScope()
     var user by remember { mutableStateOf("") }
+    var userList by remember { mutableStateOf("") }
+
     Column {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Button(onClick = {
                 scope.launch {
-                    val u = userViewModel.fetchUser()
+                    val u = userViewModel.fetchUser((Math.random()*100+1).toInt())
                     user = u.toString()
                     Log.d(TAG, "UserScreen: $u")
                 }
@@ -39,6 +41,18 @@ fun UserScreen(userViewModel: UserViewModel){
             }
         }
         Text(text = user)
+
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            Button(onClick = {
+                scope.launch {
+                    userList = userViewModel.getUsers(mapOf("sort" to "desc", "limit" to "10")).toString()
+                }
+            },
+            ) {
+                Text(text = "GetUserList")
+            }
+        }
+        Text(text = userList)
     }
     
 
